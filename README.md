@@ -11,19 +11,19 @@ Vaughan S., 2010, MNRAS, 402, 307
 
 spritzer is not (yet) an R package, and is still in development. To set up the R functions source the .R files
 ```
-source("bayes.R")
-'''
+source(bayes.R")
+```
 
 You will also need to have installed one additional package
 ```
 install.packages("mnormt")
-'''
+```
 
 ## Usage
 
 Given a data file as input, containing the time series data in columns (e.g. time, value) of a plain text file
 
-'''
+```
 result <- bayes("data/mrk766.txt")
-'''
+```
 
