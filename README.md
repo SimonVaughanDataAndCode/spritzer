@@ -7,14 +7,16 @@ spritzer is a set of R functions developed for detecting strictly or nearly peri
 Vaughan S., 2010, MNRAS, 402, 307
 [(http://adsabs.harvard.edu/abs/2009arXiv0910.2706V)]
 
+The name SPRITZER is a blend of the words Strictly Periodic Tester.
+
 ## Installation
 
-spritzer is not (yet) an R package, and is still in development. To set up the R functions source the .R files
+spritzer is not (yet) an R package, and is still in development. To set up the R functions source the .R files:
 ```
-source(bayes.R")
+source("bayes.R")
 ```
 
-You will also need to have installed one additional package
+It requires the mnormt package. If you don't already have this, you will also need to install it locally:
 ```
 install.packages("mnormt")
 ```
