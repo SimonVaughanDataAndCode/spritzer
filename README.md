@@ -20,11 +20,14 @@ It requires the mnormt package. If you don't already have this, you will also ne
 install.packages("mnormt")
 ```
 
-## Usage
+## Basic usage
 
-Given a data file as input, containing the time series data in columns (e.g. time, value) of a plain text file
+Given a data file as input, containing the time series data in columns (e.g. time, value, error [optional]) of a plain text file
 
 ```
 result <- bayes("data/mrk766.txt")
 ```
 
+## Assumptions
+
+Spritzer works best if the input time series is regularly sampled, with no gaps, and is a realisation of a red noise process (with a smooth, steep power spectrum), which might contain an additional strictly periodic component. See my 2010 paper for more details.
