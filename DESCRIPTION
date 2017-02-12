@@ -1,0 +1,15 @@
+Package: spritzer
+Title: Search for periodic signals in noisy time series using Fourier methods.
+Version: 0.1
+Authors@R: person("Simon", "Vaughan", email = "svdataman@gmail.com",
+                  role = c("aut", "cre"))
+Description: spritzer is a set of R functions developed for detecting strictly
+  or nearly periodic signals in time series dominated by red noise. It is 
+  based on code developed and used in "A Bayesian test for periodic signals 
+  in red noise" by Vaughan S. (2010, MNRAS, 402, 307). The name SPRITZER is a 
+  blend of the words Strictly Periodic Tester.
+Depends: R (>= 3.1.0)
+License: MIT + file LICENSE
+LazyData: true
+Imports: 
+  mnormt
