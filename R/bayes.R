@@ -1,6 +1,6 @@
 
 # ------------------------------------------------
-# define PSD model 
+# define PSD model
 #
 # Additional parameters that are not to be fitted but
 # passed to the model functions are stored in the MOD
@@ -10,9 +10,9 @@
 
    a.low <- mod[2]
 
-   if (mod[1] == 0) { 
-     y.mod <- model0(par, x) 
-   } 
+   if (mod[1] == 0) {
+     y.mod <- model0(par, x)
+   }
 
    if (mod[1] == 1) {
      y.mod <- model1(par, x, a.low)
@@ -32,7 +32,7 @@
 # ------------------------------------------------
 # define PSD model as a power law y = b*x^-a + c
 
-model0 <- function(par, x) { 
+model0 <- function(par, x) {
   logmin <- -100
   a <- par[1]
   b <- par[2]
@@ -41,11 +41,11 @@ model0 <- function(par, x) {
   ly.mod <- -a*log(x)+b
   ly.mod <- pmax(ly.mod,logmin)
   y.mod <- exp(ly.mod) + exp(c)
-  return(y.mod) 
+  return(y.mod)
 }
 
 # ------------------------------------------------
-# define PSD model as a bending power law 
+# define PSD model as a bending power law
 #
 # y(x) = b*x^(-a1) / [1 + (x/x_b)^(a2-a1) ] + c
 #
@@ -127,23 +127,23 @@ model1 <- function(par, x, a.low=1.0) {
 
 
 # ------------------------------------------------
-# define PSD model as a power law y = b*x^-a 
+# define PSD model as a power law y = b*x^-a
 
-model2 <- function(par, x) { 
+model2 <- function(par, x) {
   logmin <- -100
   a <- par[1]
   b <- par[2]
 
   ly.mod <- -a*log(x)+b
   ly.mod <- pmax(ly.mod,logmin)
-  y.mod <- exp(ly.mod) 
-  return(y.mod) 
+  y.mod <- exp(ly.mod)
+  return(y.mod)
 }
 
 # ------------------------------------------------
-# define PSD model as a bending power law 
+# define PSD model as a bending power law
 #
-# y(x) = b*x^(-a1) / [1 + (x/x_b)^(a2-a1) ] 
+# y(x) = b*x^(-a1) / [1 + (x/x_b)^(a2-a1) ]
 #
 # y(x >> x_b) = A * x^(-a2) * x_b^(a2-a1)
 # y(x << x_b) = A * x^(-a1)
@@ -230,7 +230,7 @@ mlogl <- function(par, x, y, mod=c(0, 1.0)) {
 
 # ------------------------------------------------
 # define posterior in terms of likelihood * prior
-# for the parameters. Actually we work with  
+# for the parameters. Actually we work with
 # -log[posterior] = -log[likelihood] + -log[prior]
 
 lpost <- function(par, x, y, mod=c(0, 1.0)) {
@@ -257,7 +257,7 @@ mlprior <- function(par, mod=c(0, 1.0)) {
   alim <- c(-1,8)
 
 # define prior density at parameters = par
-# as the product of the prior densities 
+# as the product of the prior densities
 # for each parameter
 
   if ( mod[1] == 0 ) {
@@ -268,7 +268,7 @@ mlprior <- function(par, mod=c(0, 1.0)) {
      pb <- 1.0
      pc <- 1.0
      pr <- pa*pb*pc
-  } 
+  }
 
   if (mod[1] == 1) {
      a <- par[1]
@@ -295,7 +295,7 @@ mlprior <- function(par, mod=c(0, 1.0)) {
      pa <- (a >= min(alim) && a <= max(alim))
      pb <- 1.0
      pr <- pa*pb
-  } 
+  }
 
   if (mod[1] == 3) {
      a <- par[1]
@@ -334,12 +334,12 @@ pgram <- function(x, dt, rms=TRUE, leahy=FALSE, plotq=TRUE) {
 # define the different normalisation options
 
   norm <- 2.0*dt/N
-  if (rms == TRUE && leahy == FALSE) { 
-    norm <- norm/x.mean^2 
+  if (rms == TRUE && leahy == FALSE) {
+    norm <- norm/x.mean^2
     ylab <- "Power density [(rms/mean)^2/Hz]"
   }
-  if (leahy == TRUE) { 
-    norm <- norm/x.mean 
+  if (leahy == TRUE) {
+    norm <- norm/x.mean
     ylab <- "Power density [Leahy norm.]"
   }
   if (leahy == FALSE && rms == FALSE) {
@@ -370,7 +370,7 @@ pgram <- function(x, dt, rms=TRUE, leahy=FALSE, plotq=TRUE) {
 
     smooth.per <- lowess(log(f), log(pow), f=0.1)
     smooth.x <- exp(smooth.per$x)
-    smooth.y <- exp(smooth.per$y + 0.557214) 
+    smooth.y <- exp(smooth.per$y + 0.557214)
     lines(smooth.x, smooth.y, type="l", col="blue", lw=5)
   }
 
@@ -383,7 +383,7 @@ pgram <- function(x, dt, rms=TRUE, leahy=FALSE, plotq=TRUE) {
 
 # ------------------------------------------------
 # The MCMC routine. Metropolis-Hastings algorithm
-# using a Normal random walk for the proposal 
+# using a Normal random walk for the proposal
 # distribution.
 #
 #  theta.0 - vector of starting parameter values
@@ -429,7 +429,7 @@ mchain <- function(x, y, N, mod=c(0, 1.0), theta.0, cov, discard=floor(N/2)) {
 
   log.pnew <- lpost(theta.prop, x, y, mod=mod)
   log.r <- log.p[t-1] - log.pnew
-  
+
 # decide whether or not to update theta.
 # theta is updated with probability min(r,1)
 # otherwise it is left as before.
@@ -458,10 +458,10 @@ mchain <- function(x, y, N, mod=c(0, 1.0), theta.0, cov, discard=floor(N/2)) {
 
   theta <- theta[,(discard+1):N]
   log.p <- log.p[(discard+1):N]
-  L <- N - discard 
+  L <- N - discard
   accept <- accept/L
 
-  mcmc.out <- list(theta=theta, 
+  mcmc.out <- list(theta=theta,
                    accept=accept,
                    log.p=log.p, L=L)
 
@@ -481,7 +481,7 @@ mchain <- function(x, y, N, mod=c(0, 1.0), theta.0, cov, discard=floor(N/2)) {
 
   par(mfrow=c(M,3))
 
-  txt <- paste("Chain",j)  
+  txt <- paste("Chain",j)
   for (m in 1:M) {
 
     lab <- paste("theta[",m,"]", sep="")
@@ -515,9 +515,9 @@ mchain <- function(x, y, N, mod=c(0, 1.0), theta.0, cov, discard=floor(N/2)) {
       B <- var(mj)*L
       v <- (L-1)/L*W + B/L
       R.hat[m] <- sqrt(v/W)
-  
+
       cat("-- Theta[",m,"] R.hat = ",R.hat[m],sep="")
-      if (R.hat[m] > 1.2) { 
+      if (R.hat[m] > 1.2) {
         cat(" ** High R.hat. Check results. **",fill=TRUE)
       } else {
         cat(" -- Good R.hat.", fill=TRUE)
@@ -574,7 +574,7 @@ mchain <- function(x, y, N, mod=c(0, 1.0), theta.0, cov, discard=floor(N/2)) {
 
   theta <- t(theta)
 
-# label the columns 
+# label the columns
 
   colnames(theta) <- paste("theta[",1:M,"]", sep="")
 
@@ -772,7 +772,7 @@ infer <- function(theta) {
     if (obs == TRUE) {
 
 # plot the MAP model and data/model residuals
-# save the existing plotting parameters, 
+# save the existing plotting parameters,
 # to be restored once finished
 
       par.mfrow <- par()$mfrow
@@ -782,7 +782,7 @@ infer <- function(theta) {
 
       layout(matrix(c(1,2)), heights=c(1.5,1))
       par(mar=c(0,6,0,0),oma=c(0,2,2,2))
-  
+
       x.plot <- c(x[1]-dx/2,x)
       y.plot <- model(theta.map, x.plot, mod=mod)
       plot(x-dx/2, y, log="xy", type="s", xlab="", ylab=ylab, xaxt="n", bty="l")
@@ -797,7 +797,7 @@ infer <- function(theta) {
 
       par(mfcol=par.mfcol, mfrow=par.mfrow, oma=par.oma, mar=par.mar)
 
-# calculate errors based on Normal approximation 
+# calculate errors based on Normal approximation
 
       theta.cov <- solve(result$hessian)
       theta.err <- sqrt(diag(theta.cov))
@@ -823,9 +823,9 @@ infer <- function(theta) {
       if (result$code == 5) {
         cat("** Maximum stepsize in NLM exceeded five times. \n")
       }
-    
+
 # display the deviance and highest outlier from observation
-   
+
       cat(" ",fill=TRUE)
       cat("-- Number of frequencies = ", nx, fill=TRUE)
       cat("-- Deviance [-2 log L] D = ", D.obs, fill=TRUE)
@@ -839,7 +839,7 @@ infer <- function(theta) {
 # since 2*data/model is chi^2_2 per data point.
 
       S.obs <- sum(rat)
-      S.exp <- 2.0*(nx-M) 
+      S.exp <- 2.0*(nx-M)
       S.sd <- sqrt(4.0*(nx-M))
 
       cat("-- Summed residual S = ", S.obs, sep="", fill=TRUE)
@@ -855,9 +855,9 @@ infer <- function(theta) {
 
     }
 
-# include the fitted parameters, covariance and test 
+# include the fitted parameters, covariance and test
 # statistics in the output list
-  
+
   result <- list(theta.map=theta.map, theta.cov=theta.cov,
                  T=T.obs, D=D.obs, f.peak=j.peak, ks=ks, sse=sse,
                  y.fit=y.map, srat=srat)
@@ -870,7 +870,7 @@ infer <- function(theta) {
   pp <- function(theta, x, mod=c(0, 1.0), Q=dim(theta)[2], x0) {
 
 # use the MCMC draws from the posterior to perform
-# posterior predictive checks. 
+# posterior predictive checks.
 # Randomly draw parameters theta.sim, use these to
 # produce some simulated data y.sim. Fit the
 # data and record the test quantities (as with the true data).
@@ -915,21 +915,21 @@ infer <- function(theta) {
 
 # store output
 
-      D[sim] <- fit.sim$D                     
+      D[sim] <- fit.sim$D
       T[sim] <- fit.sim$T
       ks[sim] <- fit.sim$ks
       sse[sim] <- fit.sim$sse
       f.peak[sim] <- fit.sim$f.peak
       y0[sim] <- y.sim[x0]
-      srat[sim] <- fit.sim$srat     
+      srat[sim] <- fit.sim$srat
 
       lrt[sim] <- calc.lrt(x, y.sim, mod=mod, theta.sim, D[sim])
- 
+
       if (sim %% jump == 0) { cat("-- ",sim/jump*10,"%",sep="",fill=TRUE) }
     }
 
-    pp.out <- list(T.sim=T, D.sim=D, f.sim=f.peak, ks.sim=ks, sse.sim=sse, 
-                   y0=y0, lrt.sim=lrt, srat.sim=srat)  
+    pp.out <- list(T.sim=T, D.sim=D, f.sim=f.peak, ks.sim=ks, sse.sim=sse,
+                   y0=y0, lrt.sim=lrt, srat.sim=srat)
     return(pp.out)
 
   }
@@ -937,7 +937,7 @@ infer <- function(theta) {
 # ------------------------------------------------
 # Function to calculate the Likelihood Ratio Test
 # statistic (LRT). Two (nested?) models are fitted
-# to the same data, and the difference between the two 
+# to the same data, and the difference between the two
 # -2*log[likelihood] functions is LRT.
 #
 # If original model is 0 (or 1) use 1 (or 0) as alternative
@@ -955,7 +955,7 @@ calc.lrt <- function(x, y, mod, theta, D) {
          y.mod <- model(par0, x, mod=mod.alt)
          par0[3] <- par0[3] + log(sum(y)/sum(y.mod))
          fit.alt <- nlm(mlogl, par0, x=x, y=y, mod=mod.alt, fscale=D)
-       } 
+       }
 
 	if (mod[1] == 1) {
 	   mod.alt <- c(0, mod[2])
@@ -971,7 +971,7 @@ calc.lrt <- function(x, y, mod, theta, D) {
          y.mod <- model(par0, x, mod=mod.alt)
          par0[3] <- par0[3] + log(sum(y)/sum(y.mod))
          fit.alt <- nlm(mlogl, par0, x=x, y=y, mod=mod.alt, fscale=D)
-      } 
+      }
 
 	if (mod[1] == 3) {
 	   mod.alt <- c(2, mod[2])
@@ -1047,7 +1047,7 @@ cont.pairs <- function(theta, n=2000, cex=1.5,
 
   M <- dim(theta)[2]
 
-# save the existing plotting parameters, 
+# save the existing plotting parameters,
 # to be restored once finished
 
  par.mfrow <- par()$mfrow
@@ -1080,7 +1080,7 @@ cont.pairs <- function(theta, n=2000, cex=1.5,
       if (i != j) {
         z <- kde2d(theta[,i], theta[,j])
         contour(z, nlevels=7, drawlabels=FALSE, xlab="",
-                ylab="",main="",axes=FALSE) 
+                ylab="",main="",axes=FALSE)
 
 # draw a box around the plot region
 
@@ -1091,19 +1091,19 @@ cont.pairs <- function(theta, n=2000, cex=1.5,
 
          if (i == 1 & j %% 2 == 0) {
             axis(2,label=TRUE)
-         } 
+         }
          if (i == M & j %% 2 == 1) {
             axis(4,label=TRUE)
          }
          if (i %% 2 == 1 & j == M) {
             axis(1,label=TRUE)
-         } 
+         }
          if (i %% 2 == 0 & j == 1) {
             axis(3,label=TRUE)
          }
-      } 
+      }
 
-# if we're on the diagonal do not plot any data, just 
+# if we're on the diagonal do not plot any data, just
 # give the name of the ith parameter
 
       if (j == i) {
@@ -1111,14 +1111,14 @@ cont.pairs <- function(theta, n=2000, cex=1.5,
              xlim=c(0,1), ylim=c(0,1))
         text(0.5, 0.5, labels[i], cex=cex)
       }
- 
+
 # if we're in the upper right half of the plot array add
 # the points to make a scatter plot.
 
       if (i > j) {
         if (cont == TRUE) {
           contour(z, nlevels=7, drawlabels=FALSE, add=TRUE, col="grey45", lwd=1)
-        }         
+        }
         points(theta[1:np,i], theta[1:np,j], pch=16, cex=0.2)
       }            # end if (i > j)
     }              # end loop over j
@@ -1134,20 +1134,9 @@ cont.pairs <- function(theta, n=2000, cex=1.5,
 # ------------------------------------------------
 
 
-
-
-
-
-
-
-
-
-
-
-
 # ------------------------------------------------
 # ------------------------------------------------
-# main program
+# main function
 #
 # N <- full length of each MCMC chain
 # J <- number of chains
@@ -1168,9 +1157,20 @@ cont.pairs <- function(theta, n=2000, cex=1.5,
 #
 # ------------------------------------------------
 
-bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE, 
-                  prep=FALSE, a.low=1.0, mod=FALSE, t.range=FALSE, 
- 			  cols=FALSE, par.init=FALSE, pause=TRUE, file.out=FALSE) {
+spritz <- function(file = "",
+           N = 5000,
+           J = 5,
+           Q = 1000,
+           ps = FALSE,
+           pois = FALSE,
+           prep = FALSE,
+           a.low = 1.0,
+           mod = FALSE,
+           t.range = FALSE,
+           cols = FALSE,
+           par.init = FALSE,
+           pause = TRUE,
+           file.out = FALSE) {
 
 # define eta: the minimum (fractional) allowed spread in sampling
 # (considered as numerical jitter)
@@ -1211,7 +1211,7 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
 # load data table from file
 
   data <- read.table(file, skip=1)
- 
+
 # assumes there are two columns: TIME, VARIABLE
 # if there are more than two columns, prompt the user
 # to select which to use. Or take values specified upon
@@ -1231,7 +1231,7 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
       str <- readline("--> ")
 
       if (str != "") {
-        cols <-  as( unlist( strsplit(str, split=" ") ), "numeric") 
+        cols <-  as( unlist( strsplit(str, split=" ") ), "numeric")
       }
     }
   }
@@ -1301,7 +1301,7 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
     cat("-- Current range [",t.range[1], ",", t.range[2], "] (RETURN to accept)", fill=TRUE)
     str <- readline("--> ")
     if (str != "") {
-       t.range <-  as( unlist( strsplit(str, split=" ") ), "numeric") 
+       t.range <-  as( unlist( strsplit(str, split=" ") ), "numeric")
        mask <- (t >= t.range[1] & t <= t.range[2])
        t <- t[mask]
        x <- x[mask]
@@ -1316,7 +1316,7 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
     print("-- Choose pre-processing of time series.")
     print("-- 0: none")
     print("-- 1: end-matching")
-    print("-- 2: first differences") 
+    print("-- 2: first differences")
     print("-- 3: subtract LOWESS smoothed trend line")
     print("-- 4: log transform")
 
@@ -1336,7 +1336,7 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
 
     if (pre.method == 2) {
       dy <- x[2:n.t] - x[1:n.t-1]
-      dx <- 0.5 * (t[2:n.t] + t[1:n.t-1]) 
+      dx <- 0.5 * (t[2:n.t] + t[1:n.t-1])
       t <- dx; x <- dy
       plot(t, x, type="s", bty="l")
     }
@@ -1367,7 +1367,7 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
   x <- pergram$f
   y.smooth <- pergram$p.smooth
 
-  nx <- length(x) 
+  nx <- length(x)
 
 # ------------------------------------------------
 # choose model
@@ -1386,7 +1386,7 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
 # log(midpoint) of freq scale. used as initial guess of
 # the break/bend frequency.
 
-  f.br <- 0.5*(max(log(x)) + min(log(x))) 
+  f.br <- 0.5*(max(log(x)) + min(log(x)))
 
   if (mdl == "0") {
     mod <- c(0, a.low)
@@ -1514,7 +1514,7 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
   ks.obs <- fit.obs$ks
   sse.obs <- fit.obs$sse
   srat.obs <- fit.obs$srat
- 
+
 # calculate p-values of statistics
 
   p.T <- mean(T.sim > T.obs)
@@ -1524,7 +1524,7 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
   p.lrt <- mean(lrt.sim > lrt.obs)
   p.srat <- mean(srat.sim > srat.obs)
 
-# and 'errors' on p-values 
+# and 'errors' on p-values
 # (from binomial formula sd = sqrt[p*(1-p)N] )
 
   p.T.err <- sqrt( p.T * (1-p.T) / length(T.sim) )
@@ -1580,7 +1580,7 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
 
   plot(t, x.t, type="l", bty="l")
 
-# frame 2: periodogram + model 
+# frame 2: periodogram + model
 
   dx <- x[1]
   x.plot <- c(x[1]-dx/2,x)
@@ -1589,16 +1589,16 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
 
   smooth.per <- lowess(log(x), log(y), f=0.2)
   smooth.x <- exp(smooth.per$x)
-  smooth.y <- exp(smooth.per$y + 0.557214) 
+  smooth.y <- exp(smooth.per$y + 0.557214)
   lines(smooth.x, smooth.y, type="l", col="blue", lw=5)
 
   lines(x.plot, y.plot, lty=1, lwd=4, col="red")
- 
+
 # frame 3: residuals
 
   y.map <- model(theta.map, x, mod=mod)
   rat <- y/y.map
-  plot(x-dx/2, rat, type="s", bty="l", log="xy", xlab="Frequency", 
+  plot(x-dx/2, rat, type="s", bty="l", log="xy", xlab="Frequency",
         ylab="data/model", ylim=c(0.1, max(10,max(rat)*1.2)))
 
   filt <- c(0.25, 0.5, 0.25)
@@ -1607,7 +1607,7 @@ bayes <- function(file="", N=5000, J=5, Q=1000, ps=FALSE, pois=FALSE,
 
   lines(range(x)-dx/2, c(1,1), lwd=4, col="red")
 
-# frame 4: histogram of T 
+# frame 4: histogram of T
 
   pp.plot(srat.obs, srat.sim, name="srat.sim", p.srat)
 

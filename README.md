@@ -30,9 +30,23 @@ and you're good to go.
 Given a data file as input, containing the time series data in columns (e.g. time, value, error [optional]) of a plain text file
 
 ```
-result <- bayes("data/mrk766.txt")
+result <- spritz("data/mrk766.txt")
 ```
 
 ## Assumptions
 
 Spritzer works best if the input time series is regularly sampled, with no gaps, and is a realisation of a red noise process (with a smooth, steep power spectrum), which might contain an additional strictly periodic component. See my 2010 paper for more details.
+
+## To do
+
+Lots to do before this is finished. 
+
+* replace the MCMC engine with one from tonic (chain generation and diagnostic plots)
+* strip out the file loading, assume user has data in memory as array (or data.frame)
+* better format of output list
+* strip out the interactive element (user response to questions) and replace with function arguments on inputs.
+* replace simulation in Fourier space with full simulations in time. 
+
+## License
+
+MIT
