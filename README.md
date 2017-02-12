@@ -10,15 +10,20 @@ The name SPRITZER is a blend of the words Strictly Periodic Tester.
 
 ## Installation
 
-spritzer is not (yet) an R package, and is still in development. To set up the R functions source the .R files:
+spritzer is an R package, but is still in development. To set up from GitHub first install Hadley Wickham's devtools.
 ```
-source("bayes.R")
+install.packages("devtools")
 ```
-
+Now you can install straight from GitHub:
+```
+devtools::install_github("svdataman/spritzer")
+```
 It requires the mnormt package. If you don't already have this, you will also need to install it locally:
 ```
 install.packages("mnormt")
+require(spritzer)
 ```
+and you're good to go.
 
 ## Basic usage
 
