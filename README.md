@@ -41,8 +41,10 @@ Spritzer works best if the input time series is regularly sampled, with no gaps,
 
 Lots to do before this is finished. 
 
-* replace the MCMC engine with one from [tonic](https://github.com/svdataman/tonic) (chain generation and diagnostic plots)
 * strip out the file loading, assume user has data in memory as array (or data.frame)
+* replace the MCMC engine with one from [tonic](https://github.com/svdataman/tonic) (chain generation and diagnostic plots)
+* documentation
+* unit tests
 * better format of output list
 * strip out the interactive element (user response to questions) and replace with function arguments on inputs.
 * replace simulation in Fourier space with full simulations in time. 
